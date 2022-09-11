@@ -1,4 +1,5 @@
 -- Function/Variable Defining
+-- Made by Pinky x Cea
 
 local darkCore = {}
 darkCore.makeDraggable = function(gui)
