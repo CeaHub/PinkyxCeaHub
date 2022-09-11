@@ -2424,7 +2424,7 @@ Event:FireServer(A_1, A_2, A_3)
         end
     end
 end)
-MiscTabMainSection:Textbox("Custom Chat Message","Bolts Ware V8 On Top",function(x)
+MiscTabMainSection:Textbox("Custom Chat Message","PinkyxCea Hub On Top!",function(x)
 		Client.Values.ChatMsg = tostring(x)
 	end)
 
@@ -2740,7 +2740,7 @@ local W=E:Section("Info")
 W:Button("Press RightShift To Hide The GUI",function()
     print("Button Pressed")
 end)
-W:Button("This script is protected by Websec",function()
+W:Button("This script is Free",function()
     print("Button Pressed")
 end)
 W:Button("Dont try to spam the webhook lol",function()
@@ -2750,32 +2750,16 @@ end)
 W:Button("If you want to donate to me",function()
     print("Button Pressed")
 end)
-W:Button("heres my tags",function()
+W:Button("heres my gmail",function()
     print("Button Pressed")
 end)
-W:Button("Cash App : $Bolts.GG",function()
+W:Button("PP: mo.jrosenthal@gmail.com",function()
     game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title="Bolts Says",
+            Title="Cea Says",
             Text="Copied Successfully!",
             Duration=15
         })
-    setclipboard("$Bolts.GG")
-end)
-W:Button("Bitcoin Click To Copy Adress ",function()
-    game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title="Bolts Says",
-            Text="Copied Successfully!",
-            Duration=15
-        })
-    setclipboard("3JAqWPuSfER17WVwxaA5RFznQrmYb8yjy7")
-end)
-W:Button("3JAqWPuSfER17WVwxaA5RFznQrmYb8yjy7",function()
-    game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title="Bolts Says",
-            Text="Copied Successfully!",
-            Duration=15
-        })
-    print("3JAqWPuSfER17WVwxaA5RFznQrmYb8yjy7")
+    setclipboard("mo.jrosenthal@gmail.com")
 end)
 W:Button("Copy Discord Link To Clip Board",function()
     setclipboard("https://discord.gg/ZYGffqUywb")
@@ -2789,17 +2773,21 @@ print("fuck")
 end)
 local E=Window:Tab("Credits")
 local W=E:Section("Credits")
-
-W:Button("cëa#1795- Owner",function()
-    print("Button Pressed")
-end)
-W:Button("PinkyPeaker#9165 - Helper",function()
+W:Button("Click on name and it will copy",function()
     setclipboard("https://discord.gg/ZYGffqUywb")
 end)
-W:Button("cool cow / stick cow#5297 - Co Owner",function()
-    print("Button Pressed")
+W:Button("cëa#1795- Owner",function()
+    setclipboard("cëa#1795")
 end)
-
+W:Button("PinkyPeaker#9165 - Owner",function()
+    setclipboard("PinkyPeaker#9165")
+end)
+W:Button("cool cow - Co Owner",function()
+    setclipboard("cool cow / stick cow#5297")
+end)
+W:Button("Discord Invite (copied to clipboard)",function()
+    setclipboard("https://discord.gg/ZYGffqUywb")
+end)
 --[[
 Section:Slider("Slider",-100,100,8,function(x)
     print(x)
