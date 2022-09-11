@@ -1,3 +1,4 @@
+-- Arsenal Script
 --Made By Cea And Pinky
 Library=loadstring(game:HttpGet("https://pastebin.com/raw/bfSMHFwJ"))()
 
@@ -2762,7 +2763,7 @@ W:Button("PP: mo.jrosenthal@gmail.com",function()
     setclipboard("mo.jrosenthal@gmail.com")
 end)
 W:Button("Copy Discord Link To Clip Board",function()
-    setclipboard("https://discord.gg/ZYGffqUywb")
+    
 end)
 W:Button("Click to copy TOS",function()
 
