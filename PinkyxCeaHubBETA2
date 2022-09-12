@@ -1,0 +1,8 @@
+-- Made by cëa#1795 & PinkyPeaker#9165
+-- https://discord.gg/ZYGffqUywb
+if game.PlaceId == 286090429 then
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/CeaHub/PinkyxCeaHub/main/Arsenal"))()
+end    
+if game.PlaceId == 7167319176 then
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/CeaHub/PinkyxCeaHub/main/PinkyxCeaHubCR"))()
+end
