@@ -1,182 +1,723 @@
---Keybinds (Change your key here)
-local Button	=	{
-	Key_00	= "h", --Toggle Aim-Assist [Enable/Disable] (Default: Disable)
-	Key_01	= "j", --Switch Target [Player/NPC/Both] (Default: Both)
-	Key_02	= "k", --Switch Aim [Head/Center] (Default: Head)
-	Key_03	= "l" --Switch Clear Type (Erase Character/Erase Humanoid) (Default: Erase Character)
-};
-local Players = game:GetService("Players");
-local Workspace = game:GetService("Workspace");
-local StarterGui = game:GetService("StarterGui");
-local RunService = game:GetService("RunService");
-local LocalPlayer = Players.LocalPlayer;
-local Mouse = LocalPlayer:GetMouse();
-local Camera = Workspace.CurrentCamera;
-local Mouse_Center = false;
-local Aim_Assist_Mode = "Both"; --(Player, NPC, Both)
-local Aim_Assist_Aim = "Head"; --(Head, Center)
-local Aim_Assist_Clear = "Character"; --(Humanoid, Character)
-local Aim_Assist_Active = false;
-local Aim_Assist_Target;
-local Event_MouseDown;
-local Event_MouseUp;
-local Event_CheckTarget;
-local Event_LockTarget;
-local Link = "rbxasset://textures/ui/LegacyRbxGui/"
-local PopupGreen = Link.."popup_greenCheckCircle.png";
-local PopupYellow = Link.."popup_warnTriangle.png";
-local PopupRed = Link.."popup_redx.png";
-local Green = Color3.fromRGB(0,255,0);
-local Red = Color3.fromRGB(255,0,0);
-local function System_Notify(Title,Text,Icon)
-	StarterGui:SetCore("SendNotification",{Title = Title; Text = Text; Icon = Icon; Duration = 5;});
-end
-local function Aim_Assist()
-	if (Aim_Assist_Active == false) then
-		Aim_Assist_Active = true;
-	else
-		Aim_Assist_Active = false;
-	end
-	if (Aim_Assist_Active == true) then
-		local Character;
-		local Target;
-		local Active = false;
-		local Teams = game:GetService("Teams");
-		local Model = Instance.new("Model",Camera);
-		Model.Name = "[Camera_Aim_Assist]";
-		local Selection = Instance.new("SelectionBox",Model);
-		Selection.Color3 = Color3.fromRGB(255,0,255);
-		Selection.LineThickness = 0.1;
-		Selection.SurfaceColor3 = Color3.fromRGB(255,0,255);
-		Event_MouseDown = Mouse.Button2Down:Connect(function()
-			Selection.SurfaceTransparency = 0.7;
-			Active = true;
-		end);
-		Event_MouseUp = Mouse.Button2Up:Connect(function()
-			Selection.SurfaceTransparency = 1;
-			Active = false;
-		end);
-		Event_CheckTarget = RunService.Heartbeat:Connect(function()
-			if (Mouse.Target ~= nil and (Mouse.Target:IsA("BasePart") or Mouse.Target:IsA("MeshPart") or Mouse.Target:IsA("UnionOperation"))) then
-				if (Mouse.Target.Parent:FindFirstChildWhichIsA("Humanoid") ~= nil or (Mouse.Target.Parent:FindFirstChildWhichIsA("Humanoid") == nil and ((Mouse.Target.Name == "HumanoidRootPart" or Mouse.Target.Parent:FindFirstChild("HumanoidRootPart")) or (Mouse.Target.Name == "Head" or Mouse.Target.Parent:FindFirstChild("Head"))))) then
-					Character = Mouse.Target.Parent;
-				elseif (Mouse.Target.Parent.Parent:FindFirstChildWhichIsA("Humanoid") ~= nil or (Mouse.Target.Parent.Parent:FindFirstChildWhichIsA("Humanoid") == nil and (Mouse.Target.Parent.Parent:FindFirstChild("HumanoidRootPart") or Mouse.Target.Parent.Parent:FindFirstChild("Head")))) then
-					Character = Mouse.Target.Parent.Parent;
-				elseif (Active == false) then
-					Target = nil;
-					Character = nil;
-				end
-				if (Character ~= nil) then
-					if ((Aim_Assist_Mode == "Both" and (Players:GetPlayerFromCharacter(Character) == nil or (Players:GetPlayerFromCharacter(Character) ~= nil and (#Teams:GetChildren() <= 1 or (#Teams:GetChildren() > 1 and Players:GetPlayerFromCharacter(Character).Team ~= LocalPlayer.Team))))) or (Aim_Assist_Mode	== "NPC" and Players:GetPlayerFromCharacter(Character) == nil) or ((Aim_Assist_Mode == "Player" and Players:GetPlayerFromCharacter(Character) ~= nil) and (#Teams:GetChildren() <= 1 or (#Teams:GetChildren () > 1 and Players:GetPlayerFromCharacter(Character).Team ~= LocalPlayer.Team)))) then
-						if (Character:FindFirstChildWhichIsA("Humanoid") ~= nil) then
-							local Humanoid = Character:FindFirstChildWhichIsA ("Humanoid");
-							if (Character:FindFirstChildWhichIsA("Humanoid").Health > 0) then
-								Aim_Assist_Target = Character;
-								Selection.Adornee = Character;
-							else
-								if (Aim_Assist_Clear == "Humanoid") then
-									Humanoid:Destroy();
-								elseif (Aim_Assist_Clear == "Character") then
-									Character:Destroy();
-								end
-								Aim_Assist_Target = nil;
-								Selection.Adornee = nil;
+local ChinaMenuUI = Instance.new("ScreenGui")
+
+local Frame = Instance.new("Frame")
+
+local UICorner = Instance.new("UICorner")
+
+local MainTitle = Instance.new("TextLabel")
+
+local AimlockButton = Instance.new("TextButton")
+
+local UICorner_2 = Instance.new("UICorner")
+
+local ImageLabel = Instance.new("ImageLabel")
+
+local UICorner_3 = Instance.new("UICorner")
+
+local ImageLabel_2 = Instance.new("ImageLabel")
+
+local UICorner_4 = Instance.new("UICorner")
+
+local ESPButton = Instance.new("TextButton")
+
+local UICorner_5 = Instance.new("UICorner")
+
+local ThingyLabel = Instance.new("TextLabel")
+
+
+
+ChinaMenuUI.Name = "ChinaMenuUI"
+
+ChinaMenuUI.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+ChinaMenuUI.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+ChinaMenuUI.ResetOnSpawn = false
+
+
+
+Frame.Parent = ChinaMenuUI
+
+Frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+
+Frame.Position = UDim2.new(0.409006774, 0, 0.403965265, 0)
+
+Frame.Size = UDim2.new(0, 295, 0, 154)
+
+
+
+UICorner.Parent = Frame
+
+
+
+MainTitle.Name = "MainTitle"
+
+MainTitle.Parent = Frame
+
+MainTitle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+
+MainTitle.BackgroundTransparency = 1.000
+
+MainTitle.Position = UDim2.new(0.158447236, 0, -0.0454545468, 0)
+
+MainTitle.Size = UDim2.new(0, 200, 0, 50)
+
+MainTitle.Font = Enum.Font.Gotham
+
+MainTitle.Text = "?????"
+
+MainTitle.TextColor3 = Color3.fromRGB(59, 255, 0)
+
+MainTitle.TextSize = 30.000
+
+
+
+AimlockButton.Name = "AimlockButton"
+
+AimlockButton.Parent = Frame
+
+AimlockButton.BackgroundColor3 = Color3.fromRGB(43, 43, 43)
+
+AimlockButton.Position = UDim2.new(0.160087466, 0, 0.27922079, 0)
+
+AimlockButton.Size = UDim2.new(0, 200, 0, 41)
+
+AimlockButton.Font = Enum.Font.Gotham
+
+AimlockButton.Text = "??? (Aimlock)"
+
+AimlockButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+AimlockButton.TextSize = 14.000
+
+
+
+UICorner_2.Parent = AimlockButton
+
+AimlockButton.MouseButton1Down:connect(function()
+
+	local dwCamera = workspace.CurrentCamera
+
+	local dwRunService = game:GetService("RunService")
+
+	local dwUIS = game:GetService("UserInputService")
+
+	local dwEntities = game:GetService("Players")
+
+	local dwLocalPlayer = dwEntities.LocalPlayer
+
+	local dwMouse = dwLocalPlayer:GetMouse()
+
+
+
+	local settings = {
+
+		Aimbot = true,
+
+		Aiming = false,
+
+		Aimbot_AimPart = "Head",
+
+		Aimbot_TeamCheck = true,
+
+		Aimbot_Draw_FOV = true,
+
+		Aimbot_FOV_Radius = 100,
+
+		Aimbot_FOV_Color = Color3.fromRGB(255, 0, 4)
+
+	}
+
+
+
+	local fovcircle = Drawing.new("Circle")
+
+	fovcircle.Visible = settings.Aimbot_Draw_FOV
+
+	fovcircle.Radius = settings.Aimbot_FOV_Radius
+
+	fovcircle.Color = settings.Aimbot_FOV_Color
+
+	fovcircle.Thickness = 2
+
+	fovcircle.Filled = false
+
+	fovcircle.Transparency = 1
+
+
+
+	fovcircle.Position = Vector2.new(dwCamera.ViewportSize.X / 2, dwCamera.ViewportSize.Y / 2)
+
+
+
+	dwUIS.InputBegan:Connect(function(i)
+
+		if i.UserInputType == Enum.UserInputType.MouseButton2 then
+
+			settings.Aiming = true
+
+		end
+
+	end)
+
+
+
+	dwUIS.InputEnded:Connect(function(i)
+
+		if i.UserInputType == Enum.UserInputType.MouseButton2 then
+
+			settings.Aiming = false
+
+		end
+
+	end)
+
+
+
+	dwRunService.RenderStepped:Connect(function()
+
+
+
+		local dist = math.huge
+
+		local closest_char = nil
+
+
+
+		if settings.Aiming then
+
+
+
+			for i,v in next, dwEntities:GetChildren() do 
+
+
+
+				if v ~= dwLocalPlayer and
+
+					v.Character and
+
+					v.Character:FindFirstChild("HumanoidRootPart") and
+
+					v.Character:FindFirstChild("Humanoid") and
+
+					v.Character:FindFirstChild("Humanoid").Health > 0 then
+
+
+
+					if settings.Aimbot_TeamCheck == true and
+
+						v.Team ~= dwLocalPlayer.Team or
+
+						settings.Aimbot_TeamCheck == false then
+
+
+
+						local char = v.Character
+
+						local char_part_pos, is_onscreen = dwCamera:WorldToViewportPoint(char[settings.Aimbot_AimPart].Position)
+
+
+
+						if is_onscreen then
+
+
+
+							local mag = (Vector2.new(dwMouse.X, dwMouse.Y) - Vector2.new(char_part_pos.X, char_part_pos.Y)).Magnitude
+
+
+
+							if mag < dist and mag < settings.Aimbot_FOV_Radius then
+
+
+
+								dist = mag
+
+								closest_char = char
+
+
+
 							end
+
 						end
+
 					end
-				else
-					Target = nil;
-					Aim_Assist_Target = nil;
-					Selection.Adornee = nil;
+
 				end
-				if (Active == false and Selection.Adornee ~= nil) then
-					if ((Mouse.X == math.floor(Mouse.ViewSizeX/2)) and (Mouse.Y == math.floor(Mouse.ViewSizeY/2))) then
-						if (Mouse_Center == false) then
-							Selection.Color3 = Green;
-							Selection.SurfaceColor3 = Green;
-							Mouse_Center = true;
-						end
-					else
-						if (Mouse_Center == true) then
-							Selection.Color3 = Red;
-							Selection.SurfaceColor3 = Red;
-							Mouse_Center = false;
-						end
-					end
-				end
-			else
-				Target = nil;
-				Aim_Assist_Target = nil;
-				Selection.Adornee = nil;
+
 			end
-		end);
-		Event_LockTarget = RunService.RenderStepped:Connect(function()
-			if ((Active == true and Aim_Assist_Active == true) and Aim_Assist_Target ~= nil and Mouse_Center == true) then
-				if (Target ~= nil) then
-					Camera.CFrame = CFrame.new(Camera.CFrame.Position,(Target.Position - Vector3.new(0,.15,0)));
-				else
-					if (Aim_Assist_Aim == "Head" and Aim_Assist_Target:FindFirstChild("Head") ~= nil) then
-						Target = Aim_Assist_Target:FindFirstChild("Head");
-					else
-						if (Aim_Assist_Target:FindFirstChild("HumanoidRootPart") ~= nil) then
-							Target = Aim_Assist_Target:FindFirstChild("HumanoidRootPart");
+
+
+
+			if closest_char ~= nil and
+
+				closest_char:FindFirstChild("HumanoidRootPart") and
+
+				closest_char:FindFirstChild("Humanoid") and
+
+				closest_char:FindFirstChild("Humanoid").Health > 0 then
+
+
+
+				dwCamera.CFrame = CFrame.new(dwCamera.CFrame.Position, closest_char[settings.Aimbot_AimPart].Position)
+
+			end
+
+		end
+
+	end)
+
+end)
+
+
+
+ImageLabel.Parent = Frame
+
+ImageLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+
+ImageLabel.BackgroundTransparency = 1.000
+
+ImageLabel.Size = UDim2.new(0, 46, 0, 43)
+
+ImageLabel.Image = "http://www.roblox.com/asset/?id=9708352398"
+
+
+
+UICorner_3.Parent = ImageLabel
+
+
+
+ImageLabel_2.Parent = Frame
+
+ImageLabel_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+
+ImageLabel_2.BackgroundTransparency = 1.000
+
+ImageLabel_2.Position = UDim2.new(0.843448102, 0, 0, 0)
+
+ImageLabel_2.Size = UDim2.new(0, 46, 0, 43)
+
+ImageLabel_2.Image = "http://www.roblox.com/asset/?id=6445790375"
+
+
+
+UICorner_4.Parent = ImageLabel_2
+
+
+
+ESPButton.Name = "ESPButton"
+
+ESPButton.Parent = Frame
+
+ESPButton.BackgroundColor3 = Color3.fromRGB(43, 43, 43)
+
+ESPButton.Position = UDim2.new(0.160087466, 0, 0.590909123, 0)
+
+ESPButton.Size = UDim2.new(0, 200, 0, 41)
+
+ESPButton.Font = Enum.Font.Gotham
+
+ESPButton.Text = "??? (ESP)"
+
+ESPButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+ESPButton.TextSize = 14.000
+
+
+
+UICorner_5.Parent = ESPButton
+
+ESPButton.MouseButton1Down:connect(function()
+
+	local dwEntities = game:GetService("Players")
+
+	local dwLocalPlayer = dwEntities.LocalPlayer 
+
+	local dwRunService = game:GetService("RunService")
+
+
+
+	local settings_tbl = {
+
+		ESP_Enabled = true,
+
+		ESP_TeamCheck = false,
+
+		Chams = true,
+
+		Chams_Color = Color3.fromRGB(104,232,104),
+
+		Chams_Transparency = 0.1,
+
+		Chams_Glow_Color = Color3.fromRGB(104,232,104)
+
+	}
+
+
+
+	function destroy_chams(char)
+
+
+
+		for k,v in next, char:GetChildren() do 
+
+
+
+			if v:IsA("BasePart") and v.Transparency ~= 1 then
+
+
+
+				if v:FindFirstChild("Glow") and 
+
+					v:FindFirstChild("Chams") then
+
+
+
+					v.Glow:Destroy()
+
+					v.Chams:Destroy() 
+
+
+
+				end 
+
+
+
+			end 
+
+
+
+		end 
+
+
+
+	end
+
+
+
+	dwRunService.Heartbeat:Connect(function()
+
+
+
+		if settings_tbl.ESP_Enabled then
+
+
+
+			for k,v in next, dwEntities:GetPlayers() do 
+
+
+
+				if v ~= dwLocalPlayer then
+
+
+
+					if v.Character and
+
+						v.Character:FindFirstChild("HumanoidRootPart") and 
+
+						v.Character:FindFirstChild("Humanoid") and 
+
+						v.Character:FindFirstChild("Humanoid").Health ~= 0 then
+
+
+
+						if settings_tbl.ESP_TeamCheck == false then
+
+
+
+							local char = v.Character 
+
+
+
+							for k,b in next, char:GetChildren() do 
+
+
+
+								if b:IsA("BasePart") and 
+
+									b.Transparency ~= 1 then
+
+
+
+									if settings_tbl.Chams then
+
+
+
+										if not b:FindFirstChild("Glow") and
+
+											not b:FindFirstChild("Chams") then
+
+
+
+											local chams_box = Instance.new("BoxHandleAdornment", b)
+
+											chams_box.Name = "Chams"
+
+											chams_box.AlwaysOnTop = true 
+
+											chams_box.ZIndex = 4 
+
+											chams_box.Adornee = b 
+
+											chams_box.Color3 = settings_tbl.Chams_Color
+
+											chams_box.Transparency = settings_tbl.Chams_Transparency
+
+											chams_box.Size = b.Size + Vector3.new(0.02, 0.02, 0.02)
+
+
+
+											local glow_box = Instance.new("BoxHandleAdornment", b)
+
+											glow_box.Name = "Glow"
+
+											glow_box.AlwaysOnTop = false 
+
+											glow_box.ZIndex = 3 
+
+											glow_box.Adornee = b 
+
+											glow_box.Color3 = settings_tbl.Chams_Glow_Color
+
+											glow_box.Size = chams_box.Size + Vector3.new(0.13, 0.13, 0.13)
+
+
+
+										end
+
+
+
+									else
+
+
+
+										destroy_chams(char)
+
+
+
+									end
+
+
+
+								end
+
+
+
+							end
+
+
+
 						else
-							Target = Aim_Assist_Target:GetPivot();
+
+
+
+							if v.Team == dwLocalPlayer.Team then
+
+								destroy_chams(v.Character)
+
+							end
+
+
+
 						end
+
+
+
+					else
+
+
+
+						destroy_chams(v.Character)
+
+
+
 					end
+
+
+
 				end
+
+
+
 			end
-		end);
-		System_Notify("Toggle:","(Aim-Assist: On) (Target: "..Aim_Assist_Mode..") Hold RMB to lock.",PopupGreen);
-	else
-		if (Event_MouseDown ~= nil) then
-			Event_MouseDown:Disconnect();
-			Event_MouseDown = nil;
+
+
+
+		else 
+
+
+
+			for k,v in next, dwEntities:GetPlayers() do 
+
+
+
+				if v ~= dwLocalPlayer and 
+
+					v.Character and 
+
+					v.Character:FindFirstChild("HumanoidRootPart") and 
+
+					v.Character:FindFirstChild("Humanoid") and 
+
+					v.Character:FindFirstChild("Humanoid").Health ~= 0 then
+
+
+
+					destroy_chams(v.Character)
+
+
+
+				end
+
+
+
+			end
+
+
+
 		end
-		if (Event_MouseUp ~= nil) then
-			Event_MouseUp:Disconnect();
-			Event_MouseUp = nil;
+
+
+
+	end)
+
+end)
+
+
+
+ThingyLabel.Name = "ThingyLabel"
+
+ThingyLabel.Parent = Frame
+
+ThingyLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+
+ThingyLabel.BackgroundTransparency = 1.000
+
+ThingyLabel.Position = UDim2.new(0.1550574, 0, 0.766233742, 0)
+
+ThingyLabel.Size = UDim2.new(0, 200, 0, 50)
+
+ThingyLabel.Font = Enum.Font.Gotham
+
+ThingyLabel.Text = "\"j\" to hide"
+
+ThingyLabel.TextColor3 = Color3.fromRGB(59, 255, 0)
+
+ThingyLabel.TextSize = 14.000
+
+
+
+-- Scripts:
+
+
+
+local function FXCVGXS_fake_script() -- Frame.Dragify 
+
+	local script = Instance.new('LocalScript', Frame)
+
+
+
+	local UIS = game:GetService("UserInputService")
+
+	function dragify(Frame)
+
+		dragToggle = nil
+
+		dragSpeed = 0.15
+
+		dragInput = nil
+
+		dragStart = nil
+
+		dragPos = nil
+
+		function updateInput(input)
+
+			Delta = input.Position - dragStart
+
+			Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + Delta.X, startPos.Y.Scale, startPos.Y.Offset + Delta.Y)
+
+			game:GetService("TweenService"):Create(Frame, TweenInfo.new(0.15), {Position = Position}):Play()
+
 		end
-		if (Event_CheckTarget ~= nil) then
-			Event_CheckTarget:Disconnect();
-			Event_CheckTarget = nil;
-		end
-		if (Event_LockTarget ~= nil) then
-			Event_LockTarget:Disconnect();
-			Event_LockTarget = nil;
-		end
-		if (Camera:FindFirstChild("[Camera_Aim_Assist]") ~= nil) then
-			Camera:FindFirstChild("[Camera_Aim_Assist]"):Destroy();
-		end
-		System_Notify("Toggle:","(Aim-Assist: Off)",PopupRed);
+
+		Frame.InputBegan:Connect(function(input)
+
+			if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) and UIS:GetFocusedTextBox() == nil then
+
+				dragToggle = true
+
+				dragStart = input.Position
+
+				startPos = Frame.Position
+
+				input.Changed:Connect(function()
+
+					if input.UserInputState == Enum.UserInputState.End then
+
+						dragToggle = false
+
+					end
+
+				end)
+
+			end
+
+		end)
+
+		Frame.InputChanged:Connect(function(input)
+
+			if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+
+				dragInput = input
+
+			end
+
+		end)
+
+		game:GetService("UserInputService").InputChanged:Connect(function(input)
+
+			if input == dragInput and dragToggle then
+
+				updateInput(input)
+
+			end
+
+		end)
+
 	end
+
+	dragify(script.Parent)
+
+	
+
 end
-Mouse.KeyDown:Connect(function(Key)
-	if (Key == Button["Key_00"]) then
-		Aim_Assist();
-	elseif (Key == Button["Key_01"]) then
-		if (Aim_Assist_Mode == "Player") then
-			Aim_Assist_Mode = "NPC";
-		elseif (Aim_Assist_Mode == "NPC") then
-			Aim_Assist_Mode	= "Both";
-		elseif (Aim_Assist_Mode == "Both") then
-			Aim_Assist_Mode = "Player";
+
+coroutine.wrap(FXCVGXS_fake_script)()
+
+local function BNPSSU_fake_script() -- Frame.LocalScript 
+
+	local script = Instance.new('LocalScript', Frame)
+
+
+
+	local frame = script.Parent -- path to the frame
+
+	local mouse = game:GetService('Players').LocalPlayer:GetMouse(); -- we need the mouse object, which also has the keyboard
+
+	
+
+	mouse.KeyDown:connect(function(key) -- whenever a key is pushed down
+
+		key = key:lower() -- i do this in all my key events, though i don't remember why
+
+		if key == 'j' then -- if key pressed is h
+
+			frame.Visible = not frame.Visible -- flip between visible/invisible
+
 		end
-		System_Notify("Aim-Assist Target:",Aim_Assist_Mode,PopupYellow);
-	elseif (Key == Button["Key_02"]) then
-		if (Aim_Assist_Aim == "Head") then
-			Aim_Assist_Aim = "Center";
-		elseif (Aim_Assist_Aim == "Center") then
-			Aim_Assist_Aim = "Head";
-		end
-		System_Notify("Aim-Assist Aim:",Aim_Assist_Aim,PopupYellow);
-	elseif (Key == Button["Key_03"]) then
-		if (Aim_Assist_Clear == "Humanoid") then
-			Aim_Assist_Clear = "Character";
-		elseif (Aim_Assist_Clear == "Character") then
-			Aim_Assist_Clear = "Humanoid";
-		end
-		System_Notify("Clear Type:",Aim_Assist_Clear,PopupYellow);
-	end
-end);
-System_Notify("Notification:","Exploit loaded",PopupYellow);
+
+	end)
+
+end
+
+coroutine.wrap(BNPSSU_fake_script)()
