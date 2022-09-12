@@ -1,0 +1,182 @@
+--Keybinds (Change your key here)
+local Button	=	{
+	Key_00	= "h", --Toggle Aim-Assist [Enable/Disable] (Default: Disable)
+	Key_01	= "j", --Switch Target [Player/NPC/Both] (Default: Both)
+	Key_02	= "k", --Switch Aim [Head/Center] (Default: Head)
+	Key_03	= "l" --Switch Clear Type (Erase Character/Erase Humanoid) (Default: Erase Character)
+};
+local Players = game:GetService("Players");
+local Workspace = game:GetService("Workspace");
+local StarterGui = game:GetService("StarterGui");
+local RunService = game:GetService("RunService");
+local LocalPlayer = Players.LocalPlayer;
+local Mouse = LocalPlayer:GetMouse();
+local Camera = Workspace.CurrentCamera;
+local Mouse_Center = false;
+local Aim_Assist_Mode = "Both"; --(Player, NPC, Both)
+local Aim_Assist_Aim = "Head"; --(Head, Center)
+local Aim_Assist_Clear = "Character"; --(Humanoid, Character)
+local Aim_Assist_Active = false;
+local Aim_Assist_Target;
+local Event_MouseDown;
+local Event_MouseUp;
+local Event_CheckTarget;
+local Event_LockTarget;
+local Link = "rbxasset://textures/ui/LegacyRbxGui/"
+local PopupGreen = Link.."popup_greenCheckCircle.png";
+local PopupYellow = Link.."popup_warnTriangle.png";
+local PopupRed = Link.."popup_redx.png";
+local Green = Color3.fromRGB(0,255,0);
+local Red = Color3.fromRGB(255,0,0);
+local function System_Notify(Title,Text,Icon)
+	StarterGui:SetCore("SendNotification",{Title = Title; Text = Text; Icon = Icon; Duration = 5;});
+end
+local function Aim_Assist()
+	if (Aim_Assist_Active == false) then
+		Aim_Assist_Active = true;
+	else
+		Aim_Assist_Active = false;
+	end
+	if (Aim_Assist_Active == true) then
+		local Character;
+		local Target;
+		local Active = false;
+		local Teams = game:GetService("Teams");
+		local Model = Instance.new("Model",Camera);
+		Model.Name = "[Camera_Aim_Assist]";
+		local Selection = Instance.new("SelectionBox",Model);
+		Selection.Color3 = Color3.fromRGB(255,0,255);
+		Selection.LineThickness = 0.1;
+		Selection.SurfaceColor3 = Color3.fromRGB(255,0,255);
+		Event_MouseDown = Mouse.Button2Down:Connect(function()
+			Selection.SurfaceTransparency = 0.7;
+			Active = true;
+		end);
+		Event_MouseUp = Mouse.Button2Up:Connect(function()
+			Selection.SurfaceTransparency = 1;
+			Active = false;
+		end);
+		Event_CheckTarget = RunService.Heartbeat:Connect(function()
+			if (Mouse.Target ~= nil and (Mouse.Target:IsA("BasePart") or Mouse.Target:IsA("MeshPart") or Mouse.Target:IsA("UnionOperation"))) then
+				if (Mouse.Target.Parent:FindFirstChildWhichIsA("Humanoid") ~= nil or (Mouse.Target.Parent:FindFirstChildWhichIsA("Humanoid") == nil and ((Mouse.Target.Name == "HumanoidRootPart" or Mouse.Target.Parent:FindFirstChild("HumanoidRootPart")) or (Mouse.Target.Name == "Head" or Mouse.Target.Parent:FindFirstChild("Head"))))) then
+					Character = Mouse.Target.Parent;
+				elseif (Mouse.Target.Parent.Parent:FindFirstChildWhichIsA("Humanoid") ~= nil or (Mouse.Target.Parent.Parent:FindFirstChildWhichIsA("Humanoid") == nil and (Mouse.Target.Parent.Parent:FindFirstChild("HumanoidRootPart") or Mouse.Target.Parent.Parent:FindFirstChild("Head")))) then
+					Character = Mouse.Target.Parent.Parent;
+				elseif (Active == false) then
+					Target = nil;
+					Character = nil;
+				end
+				if (Character ~= nil) then
+					if ((Aim_Assist_Mode == "Both" and (Players:GetPlayerFromCharacter(Character) == nil or (Players:GetPlayerFromCharacter(Character) ~= nil and (#Teams:GetChildren() <= 1 or (#Teams:GetChildren() > 1 and Players:GetPlayerFromCharacter(Character).Team ~= LocalPlayer.Team))))) or (Aim_Assist_Mode	== "NPC" and Players:GetPlayerFromCharacter(Character) == nil) or ((Aim_Assist_Mode == "Player" and Players:GetPlayerFromCharacter(Character) ~= nil) and (#Teams:GetChildren() <= 1 or (#Teams:GetChildren () > 1 and Players:GetPlayerFromCharacter(Character).Team ~= LocalPlayer.Team)))) then
+						if (Character:FindFirstChildWhichIsA("Humanoid") ~= nil) then
+							local Humanoid = Character:FindFirstChildWhichIsA ("Humanoid");
+							if (Character:FindFirstChildWhichIsA("Humanoid").Health > 0) then
+								Aim_Assist_Target = Character;
+								Selection.Adornee = Character;
+							else
+								if (Aim_Assist_Clear == "Humanoid") then
+									Humanoid:Destroy();
+								elseif (Aim_Assist_Clear == "Character") then
+									Character:Destroy();
+								end
+								Aim_Assist_Target = nil;
+								Selection.Adornee = nil;
+							end
+						end
+					end
+				else
+					Target = nil;
+					Aim_Assist_Target = nil;
+					Selection.Adornee = nil;
+				end
+				if (Active == false and Selection.Adornee ~= nil) then
+					if ((Mouse.X == math.floor(Mouse.ViewSizeX/2)) and (Mouse.Y == math.floor(Mouse.ViewSizeY/2))) then
+						if (Mouse_Center == false) then
+							Selection.Color3 = Green;
+							Selection.SurfaceColor3 = Green;
+							Mouse_Center = true;
+						end
+					else
+						if (Mouse_Center == true) then
+							Selection.Color3 = Red;
+							Selection.SurfaceColor3 = Red;
+							Mouse_Center = false;
+						end
+					end
+				end
+			else
+				Target = nil;
+				Aim_Assist_Target = nil;
+				Selection.Adornee = nil;
+			end
+		end);
+		Event_LockTarget = RunService.RenderStepped:Connect(function()
+			if ((Active == true and Aim_Assist_Active == true) and Aim_Assist_Target ~= nil and Mouse_Center == true) then
+				if (Target ~= nil) then
+					Camera.CFrame = CFrame.new(Camera.CFrame.Position,(Target.Position - Vector3.new(0,.15,0)));
+				else
+					if (Aim_Assist_Aim == "Head" and Aim_Assist_Target:FindFirstChild("Head") ~= nil) then
+						Target = Aim_Assist_Target:FindFirstChild("Head");
+					else
+						if (Aim_Assist_Target:FindFirstChild("HumanoidRootPart") ~= nil) then
+							Target = Aim_Assist_Target:FindFirstChild("HumanoidRootPart");
+						else
+							Target = Aim_Assist_Target:GetPivot();
+						end
+					end
+				end
+			end
+		end);
+		System_Notify("Toggle:","(Aim-Assist: On) (Target: "..Aim_Assist_Mode..") Hold RMB to lock.",PopupGreen);
+	else
+		if (Event_MouseDown ~= nil) then
+			Event_MouseDown:Disconnect();
+			Event_MouseDown = nil;
+		end
+		if (Event_MouseUp ~= nil) then
+			Event_MouseUp:Disconnect();
+			Event_MouseUp = nil;
+		end
+		if (Event_CheckTarget ~= nil) then
+			Event_CheckTarget:Disconnect();
+			Event_CheckTarget = nil;
+		end
+		if (Event_LockTarget ~= nil) then
+			Event_LockTarget:Disconnect();
+			Event_LockTarget = nil;
+		end
+		if (Camera:FindFirstChild("[Camera_Aim_Assist]") ~= nil) then
+			Camera:FindFirstChild("[Camera_Aim_Assist]"):Destroy();
+		end
+		System_Notify("Toggle:","(Aim-Assist: Off)",PopupRed);
+	end
+end
+Mouse.KeyDown:Connect(function(Key)
+	if (Key == Button["Key_00"]) then
+		Aim_Assist();
+	elseif (Key == Button["Key_01"]) then
+		if (Aim_Assist_Mode == "Player") then
+			Aim_Assist_Mode = "NPC";
+		elseif (Aim_Assist_Mode == "NPC") then
+			Aim_Assist_Mode	= "Both";
+		elseif (Aim_Assist_Mode == "Both") then
+			Aim_Assist_Mode = "Player";
+		end
+		System_Notify("Aim-Assist Target:",Aim_Assist_Mode,PopupYellow);
+	elseif (Key == Button["Key_02"]) then
+		if (Aim_Assist_Aim == "Head") then
+			Aim_Assist_Aim = "Center";
+		elseif (Aim_Assist_Aim == "Center") then
+			Aim_Assist_Aim = "Head";
+		end
+		System_Notify("Aim-Assist Aim:",Aim_Assist_Aim,PopupYellow);
+	elseif (Key == Button["Key_03"]) then
+		if (Aim_Assist_Clear == "Humanoid") then
+			Aim_Assist_Clear = "Character";
+		elseif (Aim_Assist_Clear == "Character") then
+			Aim_Assist_Clear = "Humanoid";
+		end
+		System_Notify("Clear Type:",Aim_Assist_Clear,PopupYellow);
+	end
+end);
+System_Notify("Notification:","Exploit loaded",PopupYellow);
